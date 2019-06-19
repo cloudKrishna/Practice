@@ -1,0 +1,58 @@
+<%@ page contentType="text/html; charset=utf-8" language="java" import="javax.xml.parsers.DocumentBuilderFactory,javax.xml.parsers.DocumentBuilder,org.w3c.dom.*" errorPage="" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
+
+
+<html>
+<head><title>Parsing of xml using DOM Parser</title>
+
+
+</head>
+<body>
+<%
+    Date startDate = null;
+    Date endDate = null;
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+    DocumentBuilder db = dbf.newDocumentBuilder();
+
+    Document doc = db.parse("c:\\Krishna\\myFolder\\AGD_LOGIN_MSG_BC1.XML");
+    Node fromDateNode = doc.getElementsByTagName("DTTM_FROM").item(0);
+    Node toDateNode = doc.getElementsByTagName("DTTM_TO").item(0);
+
+    String fromDateStr = fromDateNode.getTextContent();
+    String toDateStr = toDateNode.getTextContent();
+	
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    try {
+         startDate = sdf.parse(fromDateStr);
+		
+         endDate = sdf.parse(toDateStr);
+       
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+
+    String currentDateStr =  sdf.format(new Date());
+    Date currentDate = sdf.parse(currentDateStr);
+		
+
+		
+		  if (currentDate.compareTo(startDate) > -1 && currentDate.compareTo(endDate) < 0) {
+	
+        out.println("Announcement Notification No::"+ doc.getElementsByTagName("NOTIFICATION_TYPE").item(0).getTextContent());
+        out.println("Announcement From Date::"+ doc.getElementsByTagName("DTTM_FROM").item(0).getTextContent());
+        out.println("Announcement From Date::"+ doc.getElementsByTagName("DTTM_TO").item(0).getTextContent());
+        out.println("Announcement Message Sequence::"+ doc.getElementsByTagName("MESSAGE_SEQ").item(0).getTextContent());
+        out.println("Announcement Active Flag::"+ doc.getElementsByTagName("ACTIVE_FLAG").item(0).getTextContent());
+    }
+    
+%>
+
+
+
+</body>
+</html>
+
